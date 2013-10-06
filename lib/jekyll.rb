@@ -49,6 +49,7 @@ require 'jekyll/cleaner'
 # extensions
 require 'jekyll/plugin'
 require 'jekyll/converter'
+require 'jekyll/pre_generator'
 require 'jekyll/generator'
 require 'jekyll/command'
 

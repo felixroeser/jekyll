@@ -5,7 +5,7 @@ module Jekyll
                   :permalink_style, :tags, :time, :future, :safe, :plugins, :limit_posts,
                   :show_drafts, :keep_files, :baseurl, :data, :file_read_opts
 
-    attr_accessor :converters, :generators
+    attr_accessor :converters, :generators, :pre_generators
 
     # Public: Initialize a new Site.
     #
@@ -34,6 +34,7 @@ module Jekyll
     # Returns nothing.
     def process
       self.reset
+      self.pre_generate
       self.read
       self.generate
       self.render
@@ -79,8 +80,9 @@ module Jekyll
         end
       end
 
-      self.converters = instantiate_subclasses(Jekyll::Converter)
-      self.generators = instantiate_subclasses(Jekyll::Generator)
+      self.pre_generators = instantiate_subclasses(Jekyll::PreGenerator)
+      self.converters      = instantiate_subclasses(Jekyll::Converter)
+      self.generators      = instantiate_subclasses(Jekyll::Generator)
     end
 
     # Check that the destination dir isn't the source dir or a directory
@@ -215,6 +217,15 @@ module Jekyll
 
         key = sanitize_filename(File.basename(entry, '.*'))
         self.data[key] = YAML.safe_load_file(path)
+      end
+    end
+
+    # Run each of the PreGenerators
+    #
+    # Returns nothing
+    def pre_generate
+      self.pre_generators.each do |pre_generator|
+        pre_generator.generate(self)
       end
     end
 

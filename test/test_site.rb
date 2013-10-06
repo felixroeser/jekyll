@@ -152,6 +152,7 @@ class TestSite < Test::Unit::TestCase
     should "setup plugins in priority order" do
       assert_equal @site.converters.sort_by(&:class).map{|c|c.class.priority}, @site.converters.map{|c|c.class.priority}
       assert_equal @site.generators.sort_by(&:class).map{|g|g.class.priority}, @site.generators.map{|g|g.class.priority}
+      assert_equal @site.pre_generators.sort_by(&:class).map{|g|g.class.priority}, @site.pre_generators.map{|g|g.class.priority}
     end
 
     should "read layouts" do
